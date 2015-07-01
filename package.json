@@ -23,7 +23,8 @@
     "plugins": [
       "hoodie-plugin-appconfig",
       "hoodie-plugin-email",
-      "hoodie-plugin-users"
+      "hoodie-plugin-users",
+      "hoodie-plugin-global-share"
     ]
   },
   "gitHead": "71bfcc2717da10750003c26cb50d747a993951df",
