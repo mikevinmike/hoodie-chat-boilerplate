@@ -26,6 +26,7 @@ var hoodie  = new Hoodie();
 // create a scoped 'message' store for easier re-use
 var messageStore = hoodie.store('message');
 
+hoodie.global.on('add', streamMessage);
 
 // Setup submit event listener on chat form
 chatForm.on('submit', sendMessage);
@@ -97,4 +98,20 @@ function notifySignOut(e) {
     messageStore.add(model).publish();
 }
 
+// global vs private
+/* GLOBAL
+ hoodie.global.on('add', streamMessage);
+ messageStore.add(message).publish();
+ */
+/* PRIVATE
+ messageStore.on('add', streamMessage);
+ messageStore.add(message);
+ */
+// long polling
+// save in localstorage
+// go offline --> new message --> exit app --> go online --> open app
+// plugins
+// backend (server) code possible (email)
+// couchdb hooks / data conversion possible
+// couchdb replication
 
