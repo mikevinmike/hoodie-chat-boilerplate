@@ -10,8 +10,8 @@ var chatBox = $('[data-action="send-message"]');
 chatBox.on('keydown', checkSubmit);
 
 function checkSubmit(e) {
-    // if the CMD/Ctrl key and the Enter key are both pressed down, then send the message to the store
-    if (e.metaKey && e.keyCode === 13) {
+    // if the Enter key without shift is pressed down, then send the message to the store
+    if (e.keyCode === 13 && e.shiftKey !== true) {
         sendMessage(e);
     }
 }
