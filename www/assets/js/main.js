@@ -10,8 +10,8 @@ var chatBox = $('[data-action="send-message"]');
 chatBox.on('keydown', checkSubmit);
 
 function checkSubmit(e) {
-    // if the CMD/Ctrl key and the Enter key are both pressed down, then send the message to the store
-    if (e.metaKey && e.keyCode === 13) {
+    // if the Enter key without shift is pressed down, then send the message to the store
+    if (e.keyCode === 13 && e.shiftKey !== true) {
         sendMessage(e);
     }
 }
@@ -44,7 +44,7 @@ function sendMessage(e) {
     if ( messageContent.length < 1 ) { return false; }
 
     // create a new message model
-    var message = new messageModel(messageContent);
+    var message = new MessageModel(messageContent);
 
     // using the global messageStore, add this message object and publish it to the global store.
     messageStore.add(message).publish();
@@ -57,7 +57,7 @@ function sendMessage(e) {
 }
 
 // create a message model for re-use later
-function messageModel(message) {
+function MessageModel(message) {
     var user = hoodie.account.username;
     var postDate = new Date();
 
@@ -68,8 +68,22 @@ function messageModel(message) {
     };
 }
 
+function notifySignIn(e) {
+    var notification = e + " has signed into the chat.";
+    var model = new NotifyModel(notification, 'green');
+
+    messageStore.add(model).publish();
+}
+
+function notifySignOut(e) {
+    var notification = e + " has signed out or disconnected.";
+    var model = new NotifyModel(notification, 'red');
+
+    messageStore.add(model).publish();
+}
+
 // create a notification model for re-use later
-function notifyModel(notification, status) {
+function NotifyModel(notification, status) {
     var postDate = new Date();
 
     return {
@@ -77,25 +91,6 @@ function notifyModel(notification, status) {
         'notification': notification,
         'status': status
     };
-}
-
-
-// setup event listener for new messages being saved to Hoodie
-hoodie.global.on('add', streamMessage);
-
-
-function notifySignIn(e) {
-    var notification = e + " has signed into the chat.";
-    var model = new notifyModel(notification, 'green');
-
-    messageStore.add(model).publish();
-}
-
-function notifySignOut(e) {
-    var notification = e + " has signed out or disconnected.";
-    var model = new notifyModel(notification, 'red');
-
-    messageStore.add(model).publish();
 }
 
 // global vs private
